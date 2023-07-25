@@ -1,0 +1,5 @@
+from ase.io import read,write
+
+fold = str(replacer)
+atoms = read('coords.lmp', format='lammps-data', style='atomic')
+write(fold+'/replicated_atoms.xyz', images=atoms, format='xyz')

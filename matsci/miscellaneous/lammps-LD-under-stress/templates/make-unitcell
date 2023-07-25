@@ -1,0 +1,23 @@
+# Units and processors
+units		metal
+processors	* * *
+boundary	p p p
+lattice		diamond	3.5678
+atom_style	atomic
+atom_modify	map array
+
+# Create box
+region		simbox block 0 1 0 1 0 1
+create_box	1 simbox
+create_atoms	1 box
+
+# Describe atoms
+mass		1 12
+pair_style   quip
+pair_coeff   * * ../../../potentials/gap/carbon/Carbon_GAP_20.xml "Potential xml_label=GAP_2020_4_27_60_2_50_5_436" 6
+
+# Write atoms
+write_data coords.lmp
+
+dynamical_matrix all eskm 1e-05 file dynamical.lmp binary no
+third_order all eskm 1e-05 file third_order.lmp binary no

@@ -1,0 +1,15 @@
+variable run_no equal 2
+
+units		metal
+processors	* * *
+variable fffile	string ./forcefields/ff-silicon.lmp
+boundary	p p p
+atom_style	full
+read_restart	final_restart.${run_no}
+include		${fffile}
+neighbor	.4 bin
+timestep	.001
+fix		com all momentum 1000 linear 1 1 1
+fix		nve all nve
+
+write_data	topos/coords.${run_no}

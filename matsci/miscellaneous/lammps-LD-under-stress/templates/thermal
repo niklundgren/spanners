@@ -1,0 +1,150 @@
+# Example: carbon diamond, GAP potential
+# Computes:anharmonic properties and thermal conductivity for carbon diamond (2 atoms per cell)
+# while using LAMMPS to calc unit cell and kALDo for phononics
+# Uses: ASE, LAMMPS
+# External files: potentials/gap/Carbon_Gap_20/Carbon_Gap_20.xml
+#		  scripts/lattice_dynamics.lmp
+#		  structures/diamond.lmp
+import os
+import subprocess as sp
+import numpy as np
+import matplotlib.pyplot as plt
+from ase import Atoms
+from ase.io import read, write
+from ase.cell import Cell
+from ase.build import bulk
+from ase.calculators.lammpslib import LAMMPSlib
+from kaldo.conductivity import Conductivity
+from kaldo.controllers import plotter
+from kaldo.forceconstants import ForceConstants
+from kaldo.helpers.storage import get_folder_from_label
+from kaldo.phonons import Phonons
+import time
+
+scale = int(replacer)
+num_threads = os.getenv('OMP_NUM_THREADS')
+structure = 'diamond'
+potential = 'gap'
+fold = str(scale)
+kpts=(5,5,5)
+
+## Setup Kaldo
+# Configure force constant object
+forceconstants_config = {'format': 'lammps',
+			'folder': 'calculations/'+potential+'/'+structure}
+forceconstants = ForceConstants.from_folder(**forceconstants_config)
+print('made forceconstants!')
+
+# Configure phonon object
+phonons_config = {'forceconstants':forceconstants,
+		'kpts': kpts,
+		'is_classic': False,
+		'temperature': 300,
+		'folder': fold,
+		'storage': 'numpy'}
+phonons = Phonons(**phonons_config)
+phonons.frequency
+print('got frequencies!')
+
+### Set up the Conductivity object and thermal conductivity calculations ####
+
+# Compute thermal conductivity (t.c.) by solving Boltzmann Transport
+# Equation (BTE) with various of methods
+
+# 'phonons': phonon object obtained from the above calculations
+# 'method': specify methods to solve for BTE  
+# ('rta' for RTA,'sc' for self-consistent and 'inverse' for direct inversion of the scattering matrix)
+
+inv_cond_config = {'phonons':phonons,
+			'method':'inverse',
+			'storage':'numpy'}
+inv_cond_matrix = (Conductivity(**inv_cond_config).conductivity.sum(axis=0))
+print('Conductivity from inversion (W/m-K): ')
+print(inv_cond_matrix)
+
+rta_cond_config = {'phonons':phonons,
+                        'method':'rta',
+                        'storage':'numpy'}
+rta_cond_matrix = Conductivity(**rta_cond_config).conductivity.sum(axis=0)
+print('Conductivity from RTA (W/m-K):')
+print(rta_cond_matrix)
+
+# Visualize phonon dispersion, group velocity and density of states with 
+# the build-in plotter.
+
+# 'with_velocity': specify whether to plot both group velocity and dispersion relation
+# 'is_showing':specify if figure window pops up during simulation
+plotter.plot_dispersion(phonons,with_velocity =True,is_showing=False)
+plotter.plot_dos(phonons,is_showing=False)
+
+# Visualize heat capacity vs frequency and 
+# 'order': Index order to reshape array, 
+# 'order'='C' for C-like index order; 'F' for Fortran-like index order
+
+# Define the base folder to contain plots
+# 'base_folder':name of the base folder
+folder = fold
+if not os.path.exists(folder):
+        os.makedirs(folder)
+# Define a Boolean flag to specify if figure window pops during simulation
+is_show_fig = False
+
+frequency = phonons.frequency.flatten(order='C')
+heat_capacity = phonons.heat_capacity.flatten(order='C')
+plt.figure()
+# Is there a volume factor in this modal heat capacity too?
+plt.scatter(frequency[3:], heat_capacity[3:], s=5) # Get rid of the first three non-physical modes while plotting
+plt.xlabel("$\\nu$ (THz)", fontsize=16)
+plt.ylabel("$C_{v} \ (10^{23} \ J/K)$", fontsize=16)
+plt.savefig(folder + '/cv_vs_freq.png', dpi=300)
+if not is_show_fig:
+  plt.close()
+else:
+  plt.show()
+
+print('Starting Conductivities')
+
+### Compare phonon life times at different level of theory ########
+
+# The following shows a comparison of phonon life times
+# computed using Relaxation Time Approximation (RTA) and at direct inversion
+# of scattering matrix (inverse) methods.
+
+# 'n_phonons': number of phonons in the simulation
+# 'band_width': phonon bandwdith (THz) computed from diagonal elements
+#  of scattering matrix
+band_width = phonons.bandwidth.flatten(order='C')
+tau_RTA = (band_width[3:]) ** (-1)
+
+# Compute life times from direct inversion by dividing
+# the mean free path from inversion by the group velocities
+velocity = phonons.velocity.real.reshape((phonons.n_phonons, 3))
+mean_free_path_inversion = Conductivity(phonons=phonons, method='inverse', storage='numpy').mean_free_path
+tau_inversion = np.zeros_like(mean_free_path_inversion)
+
+for alpha in range(3):
+  for mu in range(len(velocity)):
+    if velocity[mu, alpha]!=0:
+      tau_inversion[mu, alpha] = np.abs(np.divide(mean_free_path_inversion[mu, alpha],
+                              velocity[mu, alpha]))
+    else:
+#       phonon life times remain zero at zero group velocities
+        tau_inversion[mu, alpha] = 0
+
+plt.figure()
+plt.plot(frequency[3:], tau_inversion[3:, 0], 'r.', label=r'$\tau_{inv,x}$')
+plt.plot(frequency[3:], tau_inversion[3:, 1], 'b.', label=r'$\tau_{inv,y}$')
+plt.plot(frequency[3:], tau_inversion[3:, 2], 'k.', label=r'$\tau_{inv,z}$')
+plt.plot(frequency[3:], tau_RTA, 'g.', label=r'$\tau_{RTA}$')
+plt.xlabel("$\\nu$ (THz)", fontsize=16)
+plt.ylabel("$\\tau \ (ps)$", fontsize=16)
+plt.yscale('log')
+plt.legend(loc='center', fontsize=20)
+plt.xlim([10, 50])
+plt.savefig(folder + '/phonon_life_time.png', dpi=300)
+if not is_show_fig:
+  plt.close()
+else:
+  plt.show()
+
+

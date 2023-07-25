@@ -1,0 +1,21 @@
+# Setup units and record style
+units        metal
+processors   * * *
+boundary     p p p
+atom_style   atomic
+atom_modify  map yes
+
+# Read in atomic coordinates
+read_data    coords.lmp
+
+# Specify forces + masses
+pair_style   tersoff
+pair_coeff   * * ../forcefields/SiCGe.tersoff Ge Si(D)
+mass         2 28.09
+mass         1 72.64
+
+# Calculate
+# In charlie's last edit fold yes/no is also an option to
+# quicken periodic system calculations
+dynamical_matrix all eskm 1e-05 file dynmat.dat binary no
+third_order all eskm 1e-05 file third.dat binary no

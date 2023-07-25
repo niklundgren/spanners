@@ -1,0 +1,25 @@
+### FOLDERS ########################################
+# data-tarballs
+218409703161
+
+# box
+218530655078
+
+
+##### API COMMANDS 
+box files:upload tar.tgz -p 218409703161
+
+box folders:download 218409703161
+
+box search -v --type=folder --all data
+
+# App ######################################
+# TOKENS ###################################
+Developer token - 
+N2ETZTTKRe5r4PEsHFfXyEij4ErUNY4s
+
+client-public
+h8lqapl47aybo94wg7fxnr40s1v14o5y
+
+client-secret
+Nn4lo5ByMWjgEeNllKdsBUkyTZPVSXTO
