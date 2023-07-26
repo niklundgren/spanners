@@ -1,4 +1,4 @@
-########## BASH BASICS #####################################
+########## COMMANDLINE BASICS #####################################
 Tab is used as an autocomplete for commands and paths
  --> this is your best friend <--
 
@@ -6,6 +6,8 @@ Tab is used as an autocomplete for commands and paths
 ls -a # lists all files (including hidden)
 
 ls -l # shows files with extra information (e.g. last use, size)
+
+ls -1 # lists ONLY file names
 
 cd <relative path> # move directories
 
@@ -33,6 +35,9 @@ you direct those somewhere
 <c1> 2> <file> # firects stderr to a file
 
 # Utilities
+
+tab - autocompletes paths and executables if possible
+
 ctrl-u - cuts before cursor
 
 crtl-y - pastes
@@ -65,38 +70,6 @@ example !!:s^file1^file2 reruns the last command with file2
 example: lmp !:1 reruns lammps with the last flags you used
 
 <cmd> !$ - repeats last arguments
-
-### Scripting
-## (for use in a <file>.sh script. run with bash <file>.sh)
-# for loop
-for x in <list of stuff>
-do
-	<cmds>
-done
-
-# if else
-if [${1} == 2]; then
-
-else
-
-fi
-
-
-# command line flag retrieval
-- set the str in getopts"<str>" to :<a>: where a is some
-flag you'd like to screen for. This syntax accepts
-arguments into a, e.g. -a 4 sets a=4. 
-
-while getopts":p:" opt; 
-do
-        case $opt in
-                p)
-			<code to run with option p>
-                        ;;
-                \?)
-                        echo "Invalid Option"
-                        ;;
-done
 
 
 ############## SPECIFIC TOOLS #############################
