@@ -9,7 +9,7 @@ font.size: 24.0
 
 axes.facecolor: white
 axes.edgecolor: black
-axes.linewidth: 1
+#axes.linewidth: 1
 axes.grid: True
 axes.titlesize: 24
 axes.labelsize: 20

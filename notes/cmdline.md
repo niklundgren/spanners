@@ -93,6 +93,15 @@ grep <exp> file
 	# -v <pattern> = excludes pattern
 	# -oP "<pattern>"= use regex
 
+# print specific columns
+awk '{ print $1, $2 }' txtfile.txt
+
+# replace first instance in each row of a pattern (xxxx) in a text file
+sed "s/xxxx/newvalue/" txtfile.txt
+
+# replace all instances in each row of a pattern (xxxx) in a text file
+sed "s/xxxx/newvalue/g" txtfile.txt
+
 
 ############### SYSTEM CHECKS #######################
 ## Check for library
