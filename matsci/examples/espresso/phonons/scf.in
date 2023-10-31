@@ -1,0 +1,50 @@
+&CONTROL
+  pseudo_dir    = "/home/nwlundgren/potentials/qe/"
+  outdir        = "wfcs/"
+  calculation   = 'scf'
+  tprnfor       = .true.
+  tstress       = .true.
+  disk_io       = 'low'
+  verbosity     = "high"
+/
+
+&SYSTEM
+  ntyp          = 2
+  nat           = 4
+  ibrav         = 4
+  A             = 4.024
+  C             = 18
+  ecutwfc       = 65
+  ecutrho       = 325
+  assume_isolated = '2D'
+  !input_dft     = "vdW-DF-CX"
+/
+
+&ELECTRONS
+  conv_thr      = 1e-13
+  mixing_beta   = 0.35
+  mixing_ndim   = 12
+  mixing_mode   = 'local-TF'
+  !startingpot   = 'file'
+  !startingwfc   = 'file'
+/
+
+&IONS
+/
+
+&CELL
+/
+
+ATOMIC_SPECIES
+In     114.818 In.PBE-NCPP.UPF  
+Se     78.96 Se.PBE-NCPP.UPF
+
+ATOMIC_POSITIONS (crystal)
+In            0.3333333333        0.6666666667        0.2546303353
+In            0.3333333333        0.6666666667        0.1003703487
+Se            0.6666666667        0.3333333333        0.0287673003
+Se            0.6666666667        0.3333333333        0.3262334356
+
+K_POINTS automatic
+6 6 1 0 0 0
+

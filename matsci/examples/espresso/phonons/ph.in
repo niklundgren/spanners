@@ -1,0 +1,16 @@
+InSe 9 9 1 phonons
+&INPUTPH
+   outdir = "wfcs"
+   fildyn = "DYN.mat"
+   tr2_ph = 1.0000000000d-17
+   alpha_mix(1) = 0.8
+   nmix_ph = 12
+   verbosity = "high"
+   ldisp = .true.
+   nq1 = 6, nq2 = 6, nq3 = 1
+   recover = .true.
+/
+
+
+
+

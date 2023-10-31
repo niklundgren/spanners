@@ -1,0 +1,7 @@
+&input
+  flfrc = 'FC.ns'
+  fildyn = 'DYN.mat'
+  zasr = 'simple'
+  loto_2d = .false.
+  !write_lr = .true.
+/

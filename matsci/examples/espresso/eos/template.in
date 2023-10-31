@@ -1,0 +1,48 @@
+&CONTROL
+  pseudo_dir    = "/home/nwlundgren/develop/potentials/qe/"
+  outdir        = "tmp/"
+  calculation   = 'relax'
+  tprnfor       = .true.
+  tstress       = .true.
+  disk_io       = 'low'
+  verbosity     = "high"
+  forc_conv_thr = 1e-4
+/
+
+&SYSTEM
+  ntyp          = 2
+  nat           = 4
+  ibrav         = 4
+  A             = xxxx
+  C             = 20
+  ecutwfc       = 70
+  ecutrho       = 350
+  input_dft     = "vdW-DF-CX"
+/
+
+&ELECTRONS
+  conv_thr      = 1e-8
+  mixing_beta   = 0.4
+  mixing_ndim   = 8
+/
+
+&IONS
+/
+
+&CELL
+/
+
+ATOMIC_SPECIES
+In     114.818 In.PBE-NPCC.UPF  
+Se     78.96 Se.PBE-NPCC.UPF
+
+ATOMIC_POSITIONS (crystal)
+In            0.3333333333        0.6666666667        0.219507590
+In            0.3333333333        0.6666666667        0.080493830
+Se            0.6666666667        0.3333333333        0.015778170
+Se            0.6666666667        0.3333333333        0.284221830
+
+K_POINTS automatic
+4 4 1 0 0 0
+
+
