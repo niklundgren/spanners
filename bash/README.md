@@ -4,3 +4,5 @@ Checks usage of peloton HPC nodes
 ## checkuse.sh
 Checks CPU+GPU usage of ssh hosts
 
+## calc.sh
+Wrapper for "bc" calculator tool
