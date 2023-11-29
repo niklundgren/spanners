@@ -11,11 +11,13 @@ ls -1 # lists ONLY file names
 
 cd <relative path> # move directories
 
-pushd <absolute path> / popd # This is one of my favorite ways to move
+pushd <path> / popd # This is one of my favorite ways to move
 around. It starts a "stack" (first in; last out) with your current
-directory at the bottom and <absolute path> as the second item. To return
+directory at the bottom and <path> as the second item. To return
 to your starting directory enter popd. You can run pushd any number of times
 before "popping" back to your initial directory.
+
+ps l # lists the processes owned by your user!
 
 # Running stuff
 <c1> | <c2> #pipes the output of one command to the next
