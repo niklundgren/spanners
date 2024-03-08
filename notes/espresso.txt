@@ -22,3 +22,38 @@ c=celldm(3)
 [ 0     0          a*c]
 
 
+### Running ph.x 
+
+# Total number of process to be used on ph.x is
+# ni x nk(scf)
+# where ni is the number of images to parallelize
+# and nk(scf) is the number of k-points parallelized in the pw.x run
+
+1. mpirun -np A pw.x -nk B pw.x < scf.in
+
+2. mpirun -np (AxC) ph.x -ni C -nk B < ph.in
+
+To give you a bit of an idea, the -ni flag makes ph.x store the dynamical matrices
+in a series of _ph<N> folders, where N is the image number.
+They're independent calculations, so it can be parallelized easily, but when it's done
+no one ever coded up the way to collect all the info so you need to do it manually.
+
+To do that, collect all the dynmat.K1.K2.xml found in <outdir>/_ph*/pwscf.phsave/
+(K1 = q-point, K2 = representation) into the <outdir>/_ph0/pwscf.phsave/ folder
+That's the standard names for the directories in v7.2, it may be different 
+if you use arguments for output folders.
+
+3. mpirun -np A ph.x -nk B < restart_ph.in
+    <--- that's a restart, which compiles the dynamical matrices
+    <--- from the individual image calculations
+
+To my ph.in file I usually add these arguments
+"""
+start_q=X
+last_q=X
+recover=.true.
+"""
+and just iterate over the q-points that didn't get diagonalized. Davide says there's a way to do
+it where it should auto-detect, but it seems to take forever. Versus this
+is basically instantaneous.
+

@@ -1,0 +1,23 @@
+# Running an DFPT phonons from quantum espresso
+1. Optimize DFT parameters by converging each against energy
+Start with some geometry that's about right, you could optionally run a vc-relax with some 
+guesses about the parameters.
+Then optimize E against these parameters one at a time. This is my reccomended order
+kpts - Use the vc-relax, and make sure ecutwfc is set about the recommended value in your chosen
+    pseudopotential. If it's a 2d material, use a vacuum of about 10 A and make sure it's only 
+    optimizing cell parameters in x+y with the "celldofree = '2Dxy'" argument (in cell "card")
+ecutwfc - Make sure this is at or above the ecutwfc recommended in the pseudopotential
+(optional) kpts - if you suspect things have changed a lot since the initial kpt-optimization
+    you could double check this, but it's probably okay to continue
+(optional) ecutrho - This is not as important but a good thing to do. Should be about 3-4x ecutwfc
+
+2. Now that you're confident about parameters, run the equation of state. Several ways to do this,
+but the easiest method is customize the template in this repo. Based of work from Davide
+Basically, run an scf calculation with small changes in the lattice parameter (~0.05 to 0.1 angstrom)
+and then fit the energy vs volume curve with one of the "Equation of State" formulations (e.g. 
+Murnaghan or Vinet)
+The template I made uses murnaghan, but vinet is fine too. 
+You could even just fit with a cubic function in numpy and plot it up, that's fine too.
+
+
+

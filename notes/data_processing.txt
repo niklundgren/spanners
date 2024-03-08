@@ -1,0 +1,35 @@
+# Data types + Resolution
+## Floats
+'e', np.float16 = finfo(resolution=0.001, min=-6.55040e+04, max=6.55040e+04, dtype=float16)
+'f', np.float32 = finfo(resolution=1e-06, min=-3.4028235e+38, max=3.4028235e+38, dtype=float32)
+'d', np.float64 = finfo(resolution=1e-15, min=-1.7976931348623157e+308, max=1.7976931348623157e+308, dtype=float64)
+Complex numbers are basically two seperate floats stored together so that a 64 bit (8-byte) complex
+number is two 32 bit (4-byte) floats. Only exist for 32+64 bit. One letter strings are: 'F', 'D' 
+## Signed Ints
+'b', np.int8 = iinfo(min=-128, max=127, dtype=int8)
+'h', np.int16 = iinfo(min=-32768, max=32767, dtype=int16)
+'l', np.int64 = info(min=-9223372036854775808, max=9223372036854775807, dtype=int64)
+Unsigned ints have shift these so that the min is 0, their respective one letter strings
+are: 'B', 'H', 'L'
+## Strings
+'Ux' - x=number of letters, Unicode encoded string. size is (x*4) bits
+'Sx' - x=number of letters, binary text string. size is x bits
+You can use either as just "U/S" without the x and numpy should detect the smallest size to
+fit all strings included
+
+# Python + Numpy pickles
+I've found it very annoying to try to collect large amounts of data with standard text files or
+standard numpy arrays (.npy). NPZ arrays can be useful, try saving them as "keyword" arguments.
+(meaning you specify a variable name for each array). Here's an example:
+
+```
+energies = np.array([<your data>])
+kpts = np.array([<your data2>])
+units = np.array([<energies units>, <kpts units>])
+np.savez('collected_data', energies=energies, kpts=kpts, units=units)
+```
+Now when you load it in, it can be recalled and with units stored (so they're never forgotten!)
+like this:
+```
+data = np.loadz('collected_data.npz')
+units = data['

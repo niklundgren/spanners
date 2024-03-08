@@ -1,0 +1,7 @@
+# NEP
+
+# nep.txt
+
+If there are N neurons, the last N numbers are their weights
+
+umber of input neurons = 

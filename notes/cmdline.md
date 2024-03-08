@@ -79,6 +79,7 @@ example: lmp !:1 reruns lammps with the last flags you used
 # 1. Text Manipulation
 # 2. System Checks
 # 3. Timing
+# 4. Retrieving data "en masse"
 ###########################################################
 ########## TEXT MANIPULATION ##############################
 # returns unique results from a regex expression
@@ -106,11 +107,12 @@ sed "s/xxxx/newvalue/g" txtfile.txt
 
 
 ############### SYSTEM CHECKS #######################
-## Check for library
+## Check for library (good for debugging when compiling)
 ldconfig -p | grep <library>
 gcc -l<library> # returns "undefined reference to 'main'"
 
 ## Count CPUS
+# Here's a bunch of different ways to do that
 htop - show cores and usage!
 lspcu
 cat /proc/cpuinfo
@@ -119,14 +121,28 @@ top (press 1 to view cores, then 3 after loading to find a node)
 ## Check GPUs
 nvidia-smi
 
-## Find files
-locate <filename>
-# searches whole file system, pipe to grep
-find <dir_to_search> --name <filename>
-
 ######### TIMING ###########################################
 # Run stuff for a certain amount of time
 timeout <t><s/m/h> <command>
 # Run stuff after a certain amount of time
 sleep <t><s/m/h>; <command>
+
+######### DATA RETRIEVAL  ###########################################
+# 0. locate directories with pattern using ls piped to grep, save this as a list, then iterate over the directories and execute command
+# Spacing on export command is important. the $( <> ) requires space before + after. Also, the semicolons basically separate
+# lines you would use in a bash script but this is executable from CLI
+export press=$( ls -la | grep -oP "\d\dGPa-1" ); for i in $press; do tail ${i}/thermo.out -n1 | cut -b 64-123; done
+# to help with syntax this is the command without my specific processing commmands
+export myvariable=$( <command to find dirs> ); for iter in $myvariable; do <command to process data in dirs>; done
+
+# 1. Find files if you've lost them.
+# This only works if the system has had a chance to update the database, so files should be older than 1 day.
+# if you want to use this, but the files are kinda new, you can try to ask someone with sudo priviledges to run
+# "sudo updatedb" which will allow you to use this.
+locate <filename>
+
+# 2. searches whole file system, pipe to grep
+# This works regardless of when the file was created. I would reccommend using your own home directory
+# as the <dir_to_search> so you won't run into permission errors.
+find <dir_to_search> --name <filename> | grep "keyword"
 
