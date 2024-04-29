@@ -99,6 +99,20 @@ grep <exp> file
 # print specific columns
 awk '{ print $1, $2 }' txtfile.txt
 
+# print specific columns from an output stream
+<your command outputting text> > awk '{ print $1, $4 }'
+
+## print textfile, but skip lines that include a pattern (xxxx)
+awk '(/xxxx/){next}{ print $0 }' txtfile.txt
+
+The expresion you want to match is put inside the /../ within the parenthesis. The
+parenthesis are kinda like if statements! and then the two bracketed pieces are the 
+condition to perform whether its true or false
+awk '(CONDITION){If true: .. }{ Else: .. }' txtfile.txt
+
+You can also string together conditions like
+awk '(CONDITION1){If true: .. }{ Else: .. } (CONDITION2){If true: .. } ' txtfile.txt
+
 # replace first instance in each row of a pattern (xxxx) in a text file
 sed "s/xxxx/newvalue/" txtfile.txt
 
