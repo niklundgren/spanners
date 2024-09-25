@@ -1,49 +1,71 @@
-# from http://www.huyng.com/posts/sane-color-scheme-for-matplotlib/
+# TYPE
+# font options - serif sans-serif cursive fantasy monospace
+font.family: serif
+# mathtext font options - cm, stix, stixsans, dejavuserif, dejavusans
+mathtext.fontset: dejavuserif
+mathtext.bf: True
+font.size: 21.0
 
-patch.linewidth: 5
-patch.facecolor: 348ABD  # blue
-patch.edgecolor: EEEEEE
-patch.antialiased: True
-
-font.size: 18.0
-
+# AXES
 axes.facecolor: white
 axes.edgecolor: black
 axes.linewidth: 1
+axes.labelpad: 10
 axes.grid: True
 axes.titlesize: 24
-axes.labelsize: 18
-axes.labelcolor: 555555
+axes.labelsize: 24
+axes.labelcolor: 000000
 axes.axisbelow: True       # grid/ticks are below elements (e.g., lines, text)
-
 axes.prop_cycle: cycler('color', ['E24A33', '348ABD', '988ED5', '777777', 'FBC15E', '8EBA42', 'FFB5B8'])
-                   # E24A33 : red
-                   # 348ABD : blue
-                   # 988ED5 : purple
-                   # 777777 : gray
-                   # FBC15E : yellow
-                   # 8EBA42 : green
-                   # FFB5B8 : pink
+                   # E24A33 348ABD 988ED5 777777 FBC15E 8EBA42 FFB5B8
+                   # red    blue   purple gray   yellow green  pink
 
-xtick.labelsize: 16
-xtick.color: 555555
+# TICKS
+xtick.labelsize: 20
+xtick.color: 000000
+xtick.labelcolor: 000000
 xtick.direction: out
+xtick.major.pad: 5
 
-ytick.labelsize: 16
-ytick.color: 555555
+ytick.alignment: right
+ytick.labelsize: 20
+ytick.color: 000000
+ytick.labelcolor: 000000
 ytick.direction: out
+ytick.major.pad: 5
+#ytick.major.pad: distance between label+ticks
+#ytick.major.width:
+#ytick.minor.pad:
+#ytick.minor.visible:
+#ytick.minor.width:
 
-#grid.color: white
-grid.color: black
-grid.alpha: 0.7
+# GRID
+grid.color: 000000
+grid.alpha: 0.8
 grid.linestyle: -    # solid line
 
+# FIG
 figure.facecolor: white
 figure.edgecolor: 0.50
 
+# LEGEND
 legend.frameon: True
+legend.edgecolor: 000000
 legend.fancybox: False
 legend.framealpha: 1.0
-legend.fontsize: 16
-legend.title_fontsize: 18
-legend.markerscale: 2.5
+legend.fontsize: 20
+legend.title_fontsize: 22
+legend.markerscale: 2
+legend.handlelength: 0.8
+legend.borderpad: 0.8
+
+
+# Lines
+lines.linewidth: 5
+lines.markersize: 0
+
+# Scatter
+#scatter.
+
+# Errorbar
+errorbar.capsize: 7

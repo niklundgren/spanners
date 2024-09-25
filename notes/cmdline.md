@@ -134,6 +134,22 @@ top (press 1 to view cores, then 3 after loading to find a node)
 
 ## Check GPUs
 nvidia-smi
+  Use the -i flag to target specific cards (e.g. in our lab, occassionally
+one would "fall off the bus" and nvidia-smi would fail unless you used -i to
+target the specific GPUs still functioning)
+
+## Check USB's 
+lsusb -t
+  This let's you know what generation of USB your ports are which can be
+helpful when buying hardware, checking compatability, etc.
+
+# Audio
+Speakers or audio device not detected after computer wakes from sleep
+sudo alsa force-reload
+or
+systemctl --user restart pulseaudio.service
+  Both seem to work when the audio isn't working
+
 
 ######### TIMING ###########################################
 # Run stuff for a certain amount of time
