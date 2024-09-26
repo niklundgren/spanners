@@ -27,7 +27,7 @@ xtick.labelcolor: 000000
 xtick.direction: out
 xtick.major.pad: 5
 
-ytick.alignment: right
+ytick.alignment: center
 ytick.labelsize: 20
 ytick.color: 000000
 ytick.labelcolor: 000000

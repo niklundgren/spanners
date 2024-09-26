@@ -1,18 +1,17 @@
 #!/bin/bash
+# Run from the spanners/bash/ folder
 # Argument should be "hp", "lambda", "nvidia" or "threadripper"
 
 printf "\n\n\tWelcome to Spanner Sentral\n"
 # PRELIMINARY CONFIGURATION #####################
-# Set up paths for home directory
-# and wherever my spanners are located
-homedir="/home/nwlundgren/"
-spannerpath=$( realpath ../ )
-binpath="${homedir}/bin"
+# Set up paths for home directory and wherever my spanners are located
+spanpath=$( realpath ../ )
+binpath="${HOME}/bin"
 
 printf "\tDetecting directory at ${binpath} .."
-if [ -d ${binpath} ];
+if [ ! -d ${binpath} ];
 then
-    printf " not found.\n\tCreating it instead.\n"
+    printf " Binpath not found.\n\tCreating it instead.\n"
     mkdir ${binpath}
 else
     printf " found!\n"
@@ -24,20 +23,62 @@ fi
 # Install config files
 printf "\tDeploying config files for Matplotlib, Nano, and SSH!\n"
 # Matplotlib
-cp ${spannerpath}/configurations/nicholas.mplstyle ${homedir}/spanners.mpl
+if [ ! -f ${HOME}/.config/matplotlib/matplotlibrc ];
+then
+    printf "Matplotlib config file not found\n"
+    if [ ! -d ${HOME}/.config/matplotlib ];
+    then
+        printf "Creating matplotlib config folder in ${HOME}/.config/matplotlib\n"
+        mkdir ${HOME}/.config/matplotlib
+    else
+        printf "found matplotlib config folder!\n"
+    fi
+    cp ${spanpath}/configurations/matplotlibrc ${HOME}/.config/matplotlib/
+else
+    printf "Matplotlib config file already deployed. Delete it and run again to use the spanners version\n"
+fi
+
 # Nano
-cp ${spannerpath}/configurations/nanorc ${homedir}/.nanorc
+if [ ! -f ${HOME}/.config/nano/.nanorc ];
+then
+    printf "Nano config file not detected"
+    if [ ! -d ${HOME}/.config/nano ];
+    then
+        printf "Creating nano config folder in ${HOME}/.config/nano"
+        mkdir ${HOME}/.config/nano
+    else
+        printf "found nano config folder!\n"
+    fi
+    cp ${spanpath}/configurations/nanorc ${HOME}/.config/nano/.nanorc
+else
+    printf "Nano config file already deployed. Delete it and run again to use the spanners version\n"
+fi
 # SSH
-cp ${spannerpath}/secure-comms ${homedir}/.ssh/config
+if [ ! -f ${HOME}/.ssh/config ];
+then
+    cp ${spanpath}/secure-ssh ${HOME}/.ssh/config
+else
+    printf "SSH config file already deployed. Delete it and run again to use the spanners version\n"
+fi
 
 # Install bash scripts
 for script in checkuse.sh calc.sh
 do
-    cp ${spannerpath}/bash/${script} ${binpath}/
+    if [ ! -f ${binpath}/${script} ];
+    then
+        cp ${spanpath}/bash/${script} ${binpath}/
+    fi
 done
 
+if ! grep -q "addtobashrc.sh" ${HOME}/.bashrc
+then
+    printf "Adding one line to end of .bashrc to source 'addtobashrc.sh'\n"
+    printf "source ${spanpath}/bash/addtobashrc.sh\n" >> ${HOME}/.bashrc
+else
+    printf "addtobashrc.sh already sourced in .bashrc file\n"
+fi
+
 ## This should be automated somehow
-printf "\tPlease add the following lines to ${homedir}/.bashrc\n"
-printf "source ${spannerpath}/bash/addtobashrc.sh\n"
-printf "source ${spannerpath}/bash/bashmarks.sh\n"
-printf "source ${spannerpath}/bash/machine-${1}.sh\n"
+#printf "\tPlease add the following lines to ${HOME}/.bashrc\n"
+#printf "source ${spanpath}/bash/addtobashrc.sh\n"
+# printf "source ${spanpath}/bash/machine-${1}.sh\n"
