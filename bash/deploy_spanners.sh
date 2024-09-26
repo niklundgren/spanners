@@ -1,6 +1,5 @@
 #!/bin/bash
 # Run from the spanners/bash/ folder
-# Argument should be "hp", "lambda", "nvidia" or "threadripper"
 
 printf "\n\n\tWelcome to Spanner Sentral\n"
 # PRELIMINARY CONFIGURATION #####################
@@ -18,7 +17,7 @@ else
 fi
 
 #################################################
-
+# CONFIG >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # Install config files
 printf "\tDeploying config files for Matplotlib, Nano, and SSH!\n"
@@ -53,6 +52,15 @@ then
 else
     printf "Nano config file already deployed. Delete it and run again to use the spanners version\n"
 fi
+
+# VMD
+if [ ! -f ${HOME}/.vmdrc ];
+then
+    cp ${spanpath}/configurations/vmdrc ${HOME}/.vmdrc
+else
+    printf "VMD rc file already deployed"
+fi
+
 # SSH
 if [ ! -f ${HOME}/.ssh/config ];
 then
@@ -61,7 +69,11 @@ else
     printf "SSH config file already deployed. Delete it and run again to use the spanners version\n"
 fi
 
-# Install bash scripts
+# CONFIGS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#################################################
+
+
+# Install bash scripts to bin folder
 for script in checkuse.sh calc.sh
 do
     if [ ! -f ${binpath}/${script} ];
@@ -70,6 +82,7 @@ do
     fi
 done
 
+# Source spanners/bash/addtobashrc.sh every time you open a shell.
 if ! grep -q "addtobashrc.sh" ${HOME}/.bashrc
 then
     printf "Adding one line to end of .bashrc to source 'addtobashrc.sh'\n"
@@ -77,8 +90,5 @@ then
 else
     printf "addtobashrc.sh already sourced in .bashrc file\n"
 fi
-
-## This should be automated somehow
-#printf "\tPlease add the following lines to ${HOME}/.bashrc\n"
-#printf "source ${spanpath}/bash/addtobashrc.sh\n"
+# todo- remove this -->
 # printf "source ${spanpath}/bash/machine-${1}.sh\n"

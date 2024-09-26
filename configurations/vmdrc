@@ -1,0 +1,11 @@
+menu main on
+menu graphics on
+menu contactmap off
+menu render off
+
+menu main move 209 91
+menu graphice move 204 317
+
+display rendermode GLSL
+display projection orthographic
+

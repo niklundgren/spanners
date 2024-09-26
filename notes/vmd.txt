@@ -1,2 +1,2 @@
-# make things periodic
+# make things periodic so you can replicate them in the viewer:
 pbc set { X Y Z } -all
