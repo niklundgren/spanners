@@ -95,3 +95,8 @@ else
 fi
 # todo- remove this -->
 # printf "source ${spanpath}/bash/machine-${1}.sh\n"
+
+#if grep -q "HISTSIZE" ${HOME}/.bashrc
+#then
+#    printf "History size is already controlled by variables in the .bashrc file\n"
+#    printf
