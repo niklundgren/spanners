@@ -58,7 +58,7 @@ legend.title_fontsize: 22
 legend.markerscale: 2
 legend.handlelength: 0.8
 legend.borderpad: 0.8
-
+legend.labelspacing: 1
 
 # Lines
 lines.linewidth: 5

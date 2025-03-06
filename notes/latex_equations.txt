@@ -1,0 +1,9 @@
+### Phonons
+
+# Group velocity
+v_{\mu \alpha} = \frac{\delta \omega_{\mu}}{\delta q_{\mu \alpha}} 
+
+### QHGK ###
+
+# Generalized velocity
+ v_{\mu \mu' \alpha} = \frac{1}{2\sqrt{\omega_{\mu}\omega_{\mu'}}} \sum_{ij\beta \gamma} (x_{i \alpha} - x_{j \alpha})D_{i \beta j \gamma} \eta_{\mu i \beta} \eta_{\mu' j \gamma}
