@@ -16,41 +16,43 @@ else
     printf " found!\n"
 fi
 
+printf "\n"
+
 #################################################
 # CONFIG >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # Install config files
-printf "\tDeploying config files for Matplotlib, Nano, and SSH!\n"
+printf "Deploying config files for Matplotlib, Nano, and SSH!\n"
 # Matplotlib
 if [ ! -f ${HOME}/.config/matplotlib/matplotlibrc ];
 then
-    printf "Matplotlib config file not found\n"
+    printf "\tMatplotlib config file not found\n"
     if [ ! -d ${HOME}/.config/matplotlib ];
     then
-        printf "Creating matplotlib config folder in ${HOME}/.config/matplotlib\n"
+        printf "\t\tCreating matplotlib config folder in ${HOME}/.config/matplotlib\n"
         mkdir ${HOME}/.config/matplotlib
     else
-        printf "found matplotlib config folder!\n"
+        printf "\t\tfound matplotlib config folder!\n"
     fi
     cp ${spanpath}/configurations/matplotlibrc ${HOME}/.config/matplotlib/
 else
-    printf "Matplotlib config file already deployed. Delete it and run again to use the spanners version\n"
+    printf "\tMatplotlib config file already deployed. Delete it and run again to use the spanners version\n"
 fi
 
 # Nano
 if [ ! -f ${HOME}/.config/nano/.nanorc ];
 then
-    printf "Nano config file not detected"
+    printf "\tNano config file not detected\n"
     if [ ! -d ${HOME}/.config/nano ];
     then
-        printf "Creating nano config folder in ${HOME}/.config/nano"
+        printf "\t\tCreating nano config folder in ${HOME}/.config/nano\n"
         mkdir ${HOME}/.config/nano
     else
-        printf "found nano config folder!\n"
+        printf "\t\tfound nano config folder!\n"
     fi
     cp ${spanpath}/configurations/nanorc ${HOME}/.config/nano/.nanorc
 else
-    printf "Nano config file already deployed. Delete it and run again to use the spanners version\n"
+    printf "\tNano config file already deployed. Delete it and run again to use the spanners version\n"
 fi
 
 # VMD
@@ -58,7 +60,7 @@ if [ ! -f ${HOME}/.vmdrc ];
 then
     cp ${spanpath}/configurations/vmdrc ${HOME}/.vmdrc
 else
-    printf "VMD rc file already deployed"
+    printf "\tVMD rc file already deployed\n"
 fi
 
 # SSH
@@ -66,7 +68,7 @@ if [ ! -f ${HOME}/.ssh/config ];
 then
     cp ${spanpath}/secure-ssh ${HOME}/.ssh/config
 else
-    printf "SSH config file already deployed. Delete it and run again to use the spanners version\n"
+    printf "\tSSH config file already deployed. Delete it and run again to use the spanners version\n"
 fi
 
 # CONFIGS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -82,6 +84,7 @@ do
     fi
 done
 
+printf "\n"
 # Source spanners/bash/addtobashrc.sh every time you open a shell.
 if ! grep -q "addtobashrc.sh" ${HOME}/.bashrc
 then

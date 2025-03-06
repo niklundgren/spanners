@@ -32,7 +32,7 @@ PALE_YELLOW='\[\033[38;5;229m\]'
 RESET='\[$(tput sgr0)\]'
 GREEN='\[\033[38;5;76m\]'
 # fun emojis: ⚡ 🏡 👉 🧠 👁  🦝 🐮 🐳 🌐 🥼 💻
-export PS1="${BLUE}\t${NC} [${GREEN}\u@\h${NC} \W]🏡 ${RESET}"
+export PS1="${BLUE}\t${NC} [${GREEN}\u@\h${NC} \W]🐮 ${RESET}"
 
 # >>>>>>> Custom Functions
 # For quickly linking binaries to bin folder
@@ -47,6 +47,18 @@ function binlink {
         ln -s $( realpath ${1} ) ${binpath}/${1}
     fi
 }
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
 
 # Bash Functions for quickly navigating
 # read docs separately. Adds "gomark", "deletemark",
