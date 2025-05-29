@@ -1,0 +1,2 @@
+# remove conda environment
+conda env remove --name environment_name

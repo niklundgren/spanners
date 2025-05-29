@@ -57,3 +57,21 @@ and just iterate over the q-points that didn't get diagonalized. Davide says the
 it where it should auto-detect, but it seems to take forever. Versus this
 is basically instantaneous.
 
+
+# Parallelization
+
+N processes total
+nk = k points
+n3 = third dimension of fft grid
+M = Khon Sham states
+
+n3 <= N/nk
+&
+n3 should be integer multiple of 
+
+Let's imagine you want to use 32 proccesses
+N = 32
+Using a 4x4x4 k-pt grid gives us a total of 64 k-points so nk<=64
+Let's assume you use nk=4
+n3 <= N/nk (32/4) = 8
+No linear algebra parallelization unless M is huge (nd or openmp)

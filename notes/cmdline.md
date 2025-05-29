@@ -119,6 +119,9 @@ sed "s/xxxx/newvalue/" txtfile.txt
 # replace all instances in each row of a pattern (xxxx) in a text file
 sed "s/xxxx/newvalue/g" txtfile.txt
 
+# Check the tails of n last updated files
+# N_files = number of files to check
+for file in $(ls -ltr | tail -nN_files | awk '{print $NF}' ); do tail ${file}; done
 
 ############### SYSTEM CHECKS #######################
 ## Check for library (good for debugging when compiling)
