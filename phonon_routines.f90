@@ -555,6 +555,7 @@ contains
 
     dyn_s=0.
     ddyn_s=0.
+    open(bin_unit, file='dyn_s.dat', status='replace', access='stream', form='formatted')
     open(77, file='ddyn_s.dat', status='new')
     do iat=1,nat
        do jat=1,nat
@@ -600,16 +601,50 @@ contains
                          t3=t3+scell(3)
                       end if
                       WRITE(77,*) "## M - mvec", m1, m2, m3, "tvec", t1, t2, t3, "weight", weight
+                      WRITE(bin_unit,*) "## M - mvec", m1, m2, m3, "tvec", t1, t2, t3, "weight", weight
                       do ik=1,nk
                          kt=dot_product(k(ik,1:3),t(1:3))
-                         WRITE(77,*) "   @@k.n ", ik, k(ik,1:3), " kt ", kt, "phexp(-kt)", phexp(-kt)
+                         ! writing for ddyn_s >>> -----------------------------------------------------------
+                         WRITE(77,*) "   @@ ddyn_s k.n ", ik, k(ik,1:3), " kt ", kt, "phexp(-kt)", phexp(-kt)
+                         WRITE(77,*) "      $$ ipol", 1, "jpol", 1, " iat ", 1, " jat ", 1, "       ddyn_s-= 1j*", &
+                                 t*fc_s(1,1,1,1,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(1,1,1,1,t1,t2,t3)
+                         WRITE(77,*) "      $$ ipol", 3, "jpol", 2, " iat ", 1, " jat ", 1, "       ddyn_s-= 1j*", &
+                                 t*fc_s(3,2,1,1,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(3,2,1,1,t1,t2,t3)
+                         WRITE(77,*) "      $$ ipol", 1, "jpol", 2, " iat ", 1, " jat ", 2, "       ddyn_s-= 1j*", &
+                                 t*fc_s(1,2,1,2,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(1,2,1,2,t1,t2,t3)
+                         WRITE(77,*) "      $$ ipol", 1, "jpol", 3, " iat ", 1, " jat ", 2, "       ddyn_s-= 1j*", &
+                                 t*fc_s(1,3,1,2,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(1,3,1,2,t1,t2,t3)
+                         WRITE(77,*) "      $$ ipol", 2, "jpol", 2, " iat ", 1, " jat ", 2, "       ddyn_s-= 1j*", &
+                                 t*fc_s(2,2,1,2,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(2,2,1,2,t1,t2,t3)
+                         ! <<< writing for ddyn_s -----------------------------------------------------------
+                         WRITE(bin_unit,*) "   @@ dyn_s k.n ", ik, k(ik,1:3), " kt ", kt, "phexp(-kt)", phexp(-kt)
+                         WRITE(bin_unit,*) "      $$ ipol", 1, "jpol", 1, " iat ", 1, " jat ", 1, "       dyn_s+= ", &
+                                 fc_s(1,1,1,1,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(1,1,1,1,t1,t2,t3)
+                         WRITE(bin_unit,*) "      $$ ipol", 3, "jpol", 2, " iat ", 1, " jat ", 1, "       dyn_s+= ", &
+                                 fc_s(3,2,1,1,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(3,2,1,1,t1,t2,t3)
+                         WRITE(bin_unit,*) "      $$ ipol", 1, "jpol", 2, " iat ", 1, " jat ", 2, "       dyn_s+= ", &
+                                 fc_s(1,2,1,2,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(1,2,1,2,t1,t2,t3)
+                         WRITE(bin_unit,*) "      $$ ipol", 1, "jpol", 3, " iat ", 1, " jat ", 2, "       dyn_s+= ", &
+                                 fc_s(1,3,1,2,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(1,3,1,2,t1,t2,t3)
+                         WRITE(bin_unit,*) "      $$ ipol", 2, "jpol", 2, " iat ", 1, " jat ", 2, "       dyn_s+= ", &
+                                 fc_s(2,2,1,2,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(2,2,1,2,t1,t2,t3)
+                         ! >>> writing for dyn_s -----------------------------------------------------------
+
+                         ! <<< writing for dyn_s -----------------------------------------------------------
                          do ipol=1,3
                             idim = (iat-1)*3+ipol
                             do jpol=1,3
                                jdim = (jat-1)*3+jpol
-                               WRITE(77,*) "      $$ ipol", ipol, "jpol", jpol,  "       ddyn_s-=", &
-                                 iunit*t*fc_s(ipol,jpol,iat,jat,t1,t2,t3)*phexp(-kt)*weight, &
-                                 " fc_s ", fc_s(ipol,jpol,iat,jat,t1,t2,t3)
                                dyn_s(ik,idim,jdim)=dyn_s(ik,idim,jdim)+&
                                     fc_s(ipol,jpol,iat,jat,t1,t2,t3)*&
                                     phexp(-kt)*weight
@@ -628,26 +663,62 @@ contains
        end do
     end do
     close(77)
+    close(bin_unit)
+    ! ------------------------------------------------------------
+    ! ===> Dump dyn_s to binary + header
+    ! ------------------------------------------------------------
+    
+    ! 1a) Grab the shape
+    n1 = size(dyn_s,1)
+    n2 = size(dyn_s,2)
+    n3 = size(dyn_s,3)
+  
+    ! 2a) Write the shape header (ASCII)
+    open(unit=hdr_unit, file="dyn_s_shape.txt", status="replace", action="write")
+    write(hdr_unit,'(3I10)') n1, n2, n3
+    close(hdr_unit)
+
+    ! 3a) Write the raw data (stream unformatted for clean NumPy read)
+    open(unit=bin_unit, file="dyn_s.bin", access="stream", &
+         form="unformatted", status="replace")
+    write(bin_unit) dyn_s
+    close(bin_unit)
     ! ------------------------------------------------------------
     ! ===> Dump ddyn_s to binary + header
     ! ------------------------------------------------------------
-    
-    ! 1) Grab the shape
+
+    ! 1a) Grab the shape
     n1 = size(ddyn_s,1)
     n2 = size(ddyn_s,2)
     n3 = size(ddyn_s,3)
     n4 = size(ddyn_s,4)
     shape = (/ n1, n2, n3, n4 /)
-  
-    ! 2) Write the shape header (ASCII)
+
+    ! 2a) Write the shape header (ASCII)
     open(unit=hdr_unit, file="ddyn_s_shape.txt", status="replace", action="write")
-    write(hdr_unit,'(6I10)') shape
+    write(hdr_unit,'(4I10)') shape
     close(hdr_unit)
 
-    ! 3) Write the raw data (stream unformatted for clean NumPy read)
+    ! 3a) Write the raw data (stream unformatted for clean NumPy read)
     open(unit=bin_unit, file="ddyn_s.bin", access="stream", &
          form="unformatted", status="replace")
     write(bin_unit) ddyn_s
+    close(bin_unit)
+
+    ! 1) Grab the shape
+    n1 = size(dyn_s,1)
+    n2 = size(dyn_s,2)
+    n3 = size(dyn_s,3)
+
+    ! 2b) Write the shape header (ASCII)
+    open(unit=hdr_unit, file="dyn_s_shape.txt", status="replace", action="write")
+    write(hdr_unit,'(3I10)') n1, n2, n3
+    close(hdr_unit)
+
+    ! 3b) Write the raw data (stream unformatted for clean NumPy read)
+    open(unit=bin_unit, file="dyn_s.bin", access="stream", &
+         form="unformatted", status="replace")
+    write(bin_unit) dyn_s
     close(bin_unit)
 
     ! The nonanalytic correction has two components in this
@@ -695,18 +766,18 @@ contains
                       "#GK    M ", m1, m2, m3, " g_old ", g_old(1:3)
                       write(bin_unit, "(A6, I5, 3F12.6, A3, 3F12.6)") &                      
                       " k.n ", ik, k(ik, :), " g ", g(1:3)
-                      write(bin_unit, "(A6, F12.6, A8, F12.6, A8, F12.6)") &                      
+                      write(bin_unit, "(A6, F12.6, A8, F12.6, A8, 3F12.6)") &
                       " expg ", exp_g, " geg ", geg, " dgeg ", dgeg
                       do iat=1,nat
                         write(bin_unit, "(A6, I4, 3F12.6)") &
-		        " ZIG ", iat, matmul(g(1:3), zeff(1, 1:3, 1:3))
-		      end do
-		      do iat=1,nat
-		        do jat=1,nat
+		                " ZIG ", iat, matmul(g(1:3), zeff(iat, 1:3, 1:3))
+                      end do
+                      do iat=1,nat
+                        do jat=1,nat
                           write(bin_unit, "(A6, I4, I4, 3F12.6)") &
-		          " GR ", iat, jat, dot_product(g(1:3),rr(iat,jat,1:3))
-		        end do
-		      end do
+                          " GR ", iat, jat, dot_product(g(1:3),rr(iat,jat,1:3))
+                        end do
+                      end do
                       do iat=1,nat
                          zig(1:3)=matmul(g(1:3),zeff(iat,1:3,1:3))
                          do jat=1,nat
