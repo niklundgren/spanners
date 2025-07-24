@@ -824,6 +824,25 @@ contains
     end if
     CLOSE(bin_unit)
     ! ------------------------------------------------------------
+    ! ===> Dump dyn_g to binary + header
+    ! ------------------------------------------------------------
+
+    ! 1) Grab the shape
+    n1 = size(ddyn_g,1)
+    n2 = size(ddyn_g,2)
+    n3 = size(ddyn_g,3)
+
+    ! 2) Write the shape header (ASCII)
+    open(unit=hdr_unit, file="dyn_g_shape.txt", status="replace", action="write")
+    write(hdr_unit,'(3I10)') n1, n2, n3
+    close(hdr_unit)
+
+    ! 3) Write the raw data (stream unformatted for clean NumPy read)
+    open(unit=bin_unit, file="dyn_g.bin", access="stream", &
+         form="unformatted", status="replace")
+    write(bin_unit) dyn_g
+    close(bin_unit)
+    ! ------------------------------------------------------------
     ! ===> Dump ddyn_g to binary + header
     ! ------------------------------------------------------------
 	
@@ -836,7 +855,7 @@ contains
 
     ! 2) Write the shape header (ASCII)
     open(unit=hdr_unit, file="ddyn_g_shape.txt", status="replace", action="write")
-    write(hdr_unit,'(6I10)') shape
+    write(hdr_unit,'(4I10)') shape
     close(hdr_unit)
 
     ! 3) Write the raw data (stream unformatted for clean NumPy read)
