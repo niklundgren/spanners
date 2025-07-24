@@ -599,17 +599,17 @@ contains
                       if(t3.le.0) then
                          t3=t3+scell(3)
                       end if
+                      WRITE(77,*) "## M - mvec", m1, m2, m3, "tvec", t1, t2, t3, "weight", weight
                       do ik=1,nk
                          kt=dot_product(k(ik,1:3),t(1:3))
+                         WRITE(77,*) "   @@k.n ", ik, k(ik,1:3), " kt ", kt, "phexp(-kt)", phexp(-kt)
                          do ipol=1,3
                             idim = (iat-1)*3+ipol
                             do jpol=1,3
                                jdim = (jat-1)*3+jpol
-                               WRITE(77,*) "ik", ik, "ipol", ipol, "jpol", jpol, "mvec", m1, m2, m3
-                               WRITE(77,*) "tvec", t1, t2, t3, "phexp(-kt)", phexp(-kt), "weight", weight
-                               WRITE(77,*) "fc_s", fc_s(ipol,jpol,iat,jat,t1,t2,t3)
-                               WRITE(77,*) "       ddyn_s-=", iunit*t*fc_s(ipol,jpol,iat,jat,t1,t2,t3)*&
-                                      phexp(-kt)*weight 
+                               WRITE(77,*) "      $$ ipol", ipol, "jpol", jpol,  "       ddyn_s-=", &
+                                 iunit*t*fc_s(ipol,jpol,iat,jat,t1,t2,t3)*phexp(-kt)*weight, &
+                                 " fc_s ", fc_s(ipol,jpol,iat,jat,t1,t2,t3)
                                dyn_s(ik,idim,jdim)=dyn_s(ik,idim,jdim)+&
                                     fc_s(ipol,jpol,iat,jat,t1,t2,t3)*&
                                     phexp(-kt)*weight
