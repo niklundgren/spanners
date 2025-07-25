@@ -906,6 +906,10 @@ contains
        end do
 
     end do
+    ! Return the result to the units used in the rest of ShengBTE.
+    omegas=omegas*toTHz
+    velocities=velocities*toTHz*bohr2nm
+
     ! 1) Grab the shape
     n1 = size(eigenvect,1)
     n2 = size(eigenvect,2)
@@ -917,7 +921,7 @@ contains
     ! 3) Write the raw data (stream unformatted for clean NumPy read)
     open(unit=bin_unit, file="eigenvectors.bin", access="stream", &
         form="unformatted", status="replace")
-    write(bin_unit) eigenvectors
+    write(bin_unit) eigenvect
     close(bin_unit)
     ! 1) Grab the shape
     n1 = size(velocities,1)
@@ -932,10 +936,20 @@ contains
         form="unformatted", status="replace")
     write(bin_unit) velocities
     close(bin_unit)
+    ! 1) Grab the shape
+    n1 = size(omegas,1)
+    n2 = size(omegas,2)
+    ! 2) Write the shape header (ASCII)
+    open(unit=hdr_unit, file="omegas_shape.txt", status="replace", action="write")
+    write(hdr_unit, '(I10, I10, I10)') n1, n2, n3
+    close(hdr_unit)
+    ! 3) Write the raw data (stream unformatted for clean NumPy read)
+    open(unit=bin_unit, file="omegas.bin", access="stream", &
+        form="unformatted", status="replace")
+    write(bin_unit) omegas
+    close(bin_unit)
 
-    ! Return the result to the units used in the rest of ShengBTE.
-    omegas=omegas*toTHz
-    velocities=velocities*toTHz*bohr2nm
+
     deallocate(k)
     deallocate(label)
     deallocate(mass)
