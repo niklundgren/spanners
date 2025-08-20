@@ -50,7 +50,7 @@ then
     else
         printf "\t\tfound nano config folder!\n"
     fi
-    cp ${spanpath}/configurations/nanorc ${HOME}/.config/nano/.nanorc
+    cp ${spanpath}/configurations/nanorc ${HOME}/.config/nano/nanorc
 else
     printf "\tNano config file already deployed. Delete it and run again to use the spanners version\n"
 fi
