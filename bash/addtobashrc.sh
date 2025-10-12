@@ -6,6 +6,14 @@ spanpath="${HOME}/spanners/"
 # located in "custom functions" subheading
 
 # >>>>>>> CUSTOMIZE SHELL >>>>>>>>>>>>>>
+# Automatically do an ls after each cd
+cd() {
+  if [ -n "$1" ]; then
+    builtin cd "$@" && ls --group-directories-first
+  else
+    builtin cd ~ && ls --group-directories-first
+  fi
+}
 
 # >>>>>>> AUTOCOMPLETE
 # add '/' to symbolic link autocompletion
@@ -31,8 +39,8 @@ BLUE='\[\033[38;5;39m\]'
 PALE_YELLOW='\[\033[38;5;229m\]'
 RESET='\[$(tput sgr0)\]'
 GREEN='\[\033[38;5;76m\]'
-# fun emojis: ⚡ 🏡 👉 🧠 👁  🦝 🐮 🐳 🌐 🥼 💻
-export PS1="${BLUE}\t${NC} [${GREEN}\u@\h${NC} \W]🐮 ${RESET}"
+# fun emojis: ⚡ 👉 🧠 👁  🦝 🐮 🐳 🌐 🥼 💻 🏡
+export PS1="${BLUE}\t${NC} [${GREEN}\h${NC} \W]🏡${RESET}"
 
 # >>>>>>> Custom Functions
 # For quickly linking binaries to bin folder
@@ -49,6 +57,7 @@ function binlink {
 }
 
 # enable color support of ls and also add handy aliases
+export LS_COLORS=${LS_COLORS}:"fi=0;37:"
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
@@ -58,7 +67,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
-
+export LS_COLORS=${LS_COLORS}:"*.py=0;37:"
 
 # Bash Functions for quickly navigating
 # read docs separately. Adds "gomark", "deletemark",
@@ -96,6 +105,6 @@ export PYTHONSTARTUP=${spanpath}/configurations/startup.py
 # <<<<<<< PYTHON <<<<<<<<<<<<<<<<<<<<<<<
 
 # >>>>>>> BASH >>>>>>>>>>>>>>>>>>>>>>>>>
-
+# Alias command to cd and ls at the same time
 
 # >>>>>>> BASH >>>>>>>>>>>>>>>>>>>>>>>>>
