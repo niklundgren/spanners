@@ -40,7 +40,7 @@ PALE_YELLOW='\[\033[38;5;229m\]'
 RESET='\[$(tput sgr0)\]'
 GREEN='\[\033[38;5;76m\]'
 # fun emojis: ⚡ 👉 🧠 👁  🦝 🐮 🐳 🌐 🥼 💻 🏡
-export PS1="${BLUE}\t${NC} [${GREEN}\h${NC} \W]🏡${RESET}"
+export PS1="${BLUE}\t${NC} [${GREEN}\h${NC} \W]🥼${RESET}"
 
 # >>>>>>> Custom Functions
 # For quickly linking binaries to bin folder
@@ -60,7 +60,7 @@ function binlink {
 export LS_COLORS=${LS_COLORS}:"fi=0;37:"
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
+    alias ls='ls --color=auto --group-directories-first'
     alias dir='dir --color=auto'
     alias vdir='vdir --color=auto'
     alias grep='grep --color=auto'
