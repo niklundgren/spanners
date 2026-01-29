@@ -38,3 +38,21 @@ CXXFLAGS='-I/home/nlundgre/develop/lzlib-1.10/ -Wall -W -O2'
 
 
 
+# make
+
+## Speed
+You can parallelize make under certain conditions (I think as long as you don't need fortran) in which case make sure to 
+use the -j flag to specify the number of tasks to run in parallel (this will create one thread per task)
+
+make -j 4 all
+
+If you're make compilation is complaining about a missing compiler, make sure you specify the right compiler paths.
+For instance, if you're receiving 
+"mpicxx: line 328: x86_64-conda-linux-gnu-c++: command not found" (after running something like make all -j 2)
+Try rerunning after speciying the c compiler with
+"CC=/path/to/x86_64-conda-linux-gnu-cpp make all -j 2"
+
+Compiler flags: 
+CC= C code
+FC= Fortran
+
