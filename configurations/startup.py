@@ -3,6 +3,7 @@ import h5py
 from scipy import constants as con
 from ase.io import read
 from ase import units
+import h5py
 #from XtraCrysPy.file_io import struct_from_outputfile_QE as qeoutput
 #from XtraCrysPy.file_io import read_relaxed_coordinates_QE as qerelax
 b2a = con.value('Bohr radius')/con.angstrom
