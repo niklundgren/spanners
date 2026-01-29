@@ -89,6 +89,9 @@ export NUMEXPR_NUM_THREADS=1
 # <<<<<<< THREADING <<<<<<<<<<<<<<<<<<<<
 
 # >>>>>>> PYTHON >>>>>>>>>>>>>>>>>>>>>>>
+# Move all cached files to hidden home directory
+export PYTHONPYCACHEPREFIX=${HOME}/.pycache
+
 # Add Numpy, ASE etc to every python interactive session
 # Requires you have a script at this path.
 # !! EDIT REQUIRED !!
